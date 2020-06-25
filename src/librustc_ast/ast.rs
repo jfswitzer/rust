@@ -1118,6 +1118,7 @@ impl Expr {
             ExprKind::Match(..) => ExprPrecedence::Match,
             ExprKind::Closure(..) => ExprPrecedence::Closure,
             ExprKind::Block(..) => ExprPrecedence::Block,
+	    ExprKind::MemoizeBlock(..) => ExprPrecedence::MemoizeBlock,
             ExprKind::TryBlock(..) => ExprPrecedence::TryBlock,
             ExprKind::Async(..) => ExprPrecedence::Async,
             ExprKind::Await(..) => ExprPrecedence::Await,
@@ -1229,6 +1230,9 @@ pub enum ExprKind {
     Async(CaptureBy, NodeId, P<Block>),
     /// An await expression (`my_future.await`).
     Await(P<Expr>),
+
+    /// [jfs] A memoize block ( ' memoize { ... } ')
+    MemoizeBlock(P<Block>),
 
     /// A try block (`try { ... }`).
     TryBlock(P<Block>),

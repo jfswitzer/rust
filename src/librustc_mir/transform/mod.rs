@@ -30,6 +30,7 @@ pub mod inline;
 pub mod instcombine;
 pub mod instrument_coverage;
 pub mod no_landing_pads;
+pub mod jfs_memoize;
 pub mod nrvo;
 pub mod promote_consts;
 pub mod qualify_min_const_fn;
@@ -336,6 +337,8 @@ fn run_post_borrowck_cleanup_passes<'tcx>(
         &add_call_guards::CriticalCallEdges,
         &elaborate_drops::ElaborateDrops,
         &no_landing_pads::NoLandingPads::new(tcx),
+	//jfs - delete later
+	&jfs_memoize::Memoize::new(tcx),
         // AddMovesForPackedDrops needs to run after drop
         // elaboration.
         &add_moves_for_packed_drops::AddMovesForPackedDrops,

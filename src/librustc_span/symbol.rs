@@ -65,6 +65,7 @@ symbols! {
         Unsafe:             "unsafe",
         Use:                "use",
         Where:              "where",
+	Memoize:            "memoize", // [jfs]
         While:              "while",
 
         // Keywords that are used in unstable Rust or reserved for future use.

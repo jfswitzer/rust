@@ -776,6 +776,7 @@ pub fn walk_expr<'a, V: Visitor<'a>>(visitor: &mut V, expression: &'a Expr) {
             walk_list!(visitor, visit_label, opt_label);
             visitor.visit_block(block);
         }
+        ExprKind::MemoizeBlock(ref body) => visitor.visit_block(body),
         ExprKind::Async(_, _, ref body) => {
             visitor.visit_block(body);
         }

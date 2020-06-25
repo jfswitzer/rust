@@ -2083,6 +2083,10 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         }
     }
 
+    /*fn lower_memoize_block(&mut self, b: &Block, targeted_by_break: bool) -> &'hir hir::Block<'hir> {
+	self.lower_block(b, targeted_by_break)
+    }*/
+
     fn lower_lifetime(&mut self, l: &Lifetime) -> hir::Lifetime {
         let span = l.ident.span;
         match l.ident {

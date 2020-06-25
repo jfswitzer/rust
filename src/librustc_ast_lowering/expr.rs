@@ -142,6 +142,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
                 ExprKind::Block(ref blk, opt_label) => {
                     hir::ExprKind::Block(self.lower_block(blk, opt_label.is_some()), opt_label)
                 }
+		ExprKind::MemoizeBlock(ref body) => hir::ExprKind::Block(self.lower_block(body, false), None),
                 ExprKind::Assign(ref el, ref er, span) => {
                     hir::ExprKind::Assign(self.lower_expr(el), self.lower_expr(er), span)
                 }
@@ -460,6 +461,10 @@ impl<'hir> LoweringContext<'_, 'hir> {
             hir::ExprKind::Block(this.arena.alloc(block), None)
         })
     }
+
+    /*fn lower_memoize_block(&mut self, body: &Block) -> hir::ExprKind {
+	self.lower_block(body, true).into_inner()
+    }*/
 
     fn wrap_in_try_constructor(
         &mut self,

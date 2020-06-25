@@ -272,6 +272,8 @@ pub enum ExprPrecedence {
     Try,
     InlineAsm,
     Mac,
+    ///[jfs]
+    MemoizeBlock,
 
     Array,
     Repeat,
@@ -352,6 +354,7 @@ impl ExprPrecedence {
             ExprPrecedence::TryBlock |
             ExprPrecedence::Async |
             ExprPrecedence::Struct |
+	    ExprPrecedence::MemoizeBlock |
             ExprPrecedence::Err => PREC_PAREN,
         }
     }

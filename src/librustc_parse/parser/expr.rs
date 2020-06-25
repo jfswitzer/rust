@@ -958,7 +958,9 @@ impl<'a> Parser<'a> {
                 err.span_label(match_sp, "while parsing this match expression");
                 err
             })
-        } else if self.eat_keyword(kw::Unsafe) {
+        } else if self.eat_keyword(kw::Memoize) {
+	    self.parse_memoize_block(lo, attrs)
+	} else if self.eat_keyword(kw::Unsafe) {
             self.parse_block_expr(None, lo, BlockCheckMode::Unsafe(ast::UserProvided), attrs)
         } else if self.is_do_catch_block() {
             self.recover_do_catch(attrs)
@@ -1732,6 +1734,19 @@ impl<'a> Parser<'a> {
             self.bump();
             Label { ident }
         })
+    }
+
+    /// [jfs] parses a ' memoize { ... }' expression (token already eaten)
+    fn parse_memoize_block(
+	&mut self,
+	span_lo: Span,
+	mut attrs: AttrVec,
+    ) -> PResult<'a, P<Expr>> {
+	let (iattrs, body) = self.parse_inner_attrs_and_block()?;
+	attrs.extend(iattrs);
+	let span = span_lo.to(body.span);
+
+	Ok(self.mk_expr(span, ExprKind::MemoizeBlock(body), attrs))
     }
 
     /// Parses a `match ... { ... }` expression (`match` token already eaten).

@@ -1930,6 +1930,14 @@ impl<'a> State<'a> {
                 self.ibox(0);
                 self.print_block_with_attrs(blk, attrs);
             }
+            ast::ExprKind::MemoizeBlock(ref blk) => {
+                self.head("memoize");
+                self.s.space();
+                // cbox/ibox in analogy to the `ExprKind::Block` arm above
+                self.cbox(INDENT_UNIT);
+                self.ibox(0);
+                self.print_block_with_attrs(blk, attrs)
+            }	    
             ast::ExprKind::Async(capture_clause, _, ref blk) => {
                 self.word_nbsp("async");
                 self.print_capture_clause(capture_clause);
