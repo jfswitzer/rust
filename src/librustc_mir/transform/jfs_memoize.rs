@@ -5,9 +5,8 @@ use crate::transform::{MirPass, MirSource};
 use rustc_middle::mir::visit::MutVisitor;
 use rustc_middle::mir::*;
 use rustc_middle::ty::TyCtxt;
-
+use std::io::Write;
 use std::env;
-use csv::Writer;
 
 pub struct Memoize<'tcx> {
     tcx: TyCtxt<'tcx>,
@@ -49,18 +48,19 @@ impl<'tcx> MutVisitor<'tcx> for Memoize<'tcx> {
 	    let kind = unwrapped.kind;
 	    match kind {
 		TerminatorKind::Call { func, args, .. } => {
-		    let file = OpenOptions::new().append(true).create(true).open("functions_i_found.txt");
+		    let file = OpenOptions::new().append(true).create(true).open("functions_i_found.csv");
 		    match file {
-			Ok(_v) => {
-			    let wtr = Writer::from_path("functions_found.csv");
-			    match wtr {
-				Ok(mut v) => {
-				    let fstring = format!("{:?}", func);
-				    let astring = format!("{:?}", args);
-				    v.write_record(&[fstring, astring]).ok();
-				}
-				Err(_e) => {},
-			    }
+			Ok(mut v) => {
+			    let fstring = format!("{:?}", func).replace(",", "");
+			    let astring = format!("{:?}", args).replace(",","");
+			    v.write(b"\"").ok();
+			    v.write(fstring.as_bytes()).ok();
+			    v.write(b"\"").ok();			    
+			    v.write(b",").ok();
+			    v.write(b"\"").ok();			    
+			    v.write(astring.as_bytes()).ok();
+			    v.write(b"\"").ok();			    
+			    v.write(b"\n").ok();
 			},
 			Err(_e) => {},
 		    };
