@@ -34,3 +34,4 @@ rustc_span = { path = "../librustc_span" }
 rustc_apfloat = { path = "../librustc_apfloat" }
 smallvec = { version = "1.0", features = ["union", "may_dangle"] }
 csv = "1.0.0"
+rand = "0.4.2"

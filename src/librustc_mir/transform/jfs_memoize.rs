@@ -1,20 +1,25 @@
 //! jfs - hooks for memoization
 
 use std::fs::OpenOptions;
+use std::fs;
 use crate::transform::{MirPass, MirSource};
 use rustc_middle::mir::visit::MutVisitor;
 use rustc_middle::mir::*;
 use rustc_middle::ty::TyCtxt;
 use std::io::Write;
 use std::env;
+//use rand::prelude::*;
 
 pub struct Memoize<'tcx> {
     tcx: TyCtxt<'tcx>,
+    id: usize,
 }
 
 impl<'tcx> Memoize<'tcx> {
     pub fn new(tcx: TyCtxt<'tcx>) -> Self {
-        Memoize { tcx }
+	fs::create_dir_all("fxcalls").ok();
+	let y: usize = rand::random();
+        Memoize { tcx: tcx, id: y }
     }
 }
 
@@ -48,7 +53,8 @@ impl<'tcx> MutVisitor<'tcx> for Memoize<'tcx> {
 	    let kind = unwrapped.kind;
 	    match kind {
 		TerminatorKind::Call { func, args, .. } => {
-		    let file = OpenOptions::new().append(true).create(true).open("functions_i_found.csv");
+		    let filename = format!("fxcalls/functions_found#{:?}.csv", self.id);
+		    let file = OpenOptions::new().append(true).create(true).open(filename);
 		    match file {
 			Ok(mut v) => {
 			    let fstring = format!("{:?}", func).replace(",", "");
